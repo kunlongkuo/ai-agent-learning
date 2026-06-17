@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>新手如何學習 AI Agent — 從零開始的完整學習路線</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/night.css" />
+  <style>
+    :root {
+      --accent:  #e8643a;
+      --accent2: #4fc3f7;
+      --success: #81c784;
+      --warn:    #ffb74d;
+    }
+    .reveal { font-family: 'Segoe UI', 'Noto Sans TC', sans-serif; }
+    .reveal h1, .reveal h2, .reveal h3 { font-family: 'Segoe UI', 'Noto Sans TC', sans-serif; font-weight: 700; letter-spacing: -0.02em; }
+    .reveal h1 { font-size: 2.2em; }
+    .reveal h2 { font-size: 1.5em; color: var(--accent2); }
+    .reveal .progress { color: var(--accent); }
+    .reveal .fragment { opacity: 0.2; }
+    .reveal .fragment.visible { opacity: 1; }
+
+    .title-slide { text-align: center; }
+    .title-slide .tag { display: inline-block; background: var(--accent); color: #fff; padding: 4px 14px; border-radius: 20px; font-size: 0.55em; letter-spacing: 0.08em; margin-bottom: 0.8em; font-weight: 600; }
+    .title-slide .subtitle { font-size: 0.75em; color: #aaa; margin-top: 0.5em; }
+    .title-slide .author { margin-top: 2em; font-size: 0.5em; color: #888; }
+
+    .stat-row { display: flex; gap: 20px; justify-content: center; margin-top: 1em; }
+    .stat-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 20px 26px; text-align: center; flex: 1; }
+    .stat-card .num { font-size: 1.8em; font-weight: 800; color: var(--accent); line-height: 1; }
+    .stat-card .label { font-size: 0.42em; color: #ccc; margin-top: 6px; }
+
+    .adv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 0.6em; }
+    .adv-card { background: rgba(255,255,255,0.05); border-top: 4px solid var(--accent2); border-radius: 8px; padding: 16px; text-align: center; }
+    .adv-card .adv-icon { margin-bottom: 8px; }
+    .adv-card .adv-icon img { width: 56px; height: 56px; object-fit: contain; display: block; margin: 0 auto; filter: drop-shadow(0 0 10px rgba(79,195,247,0.6)); }
+    .adv-card .adv-title { font-size: 0.5em; font-weight: 700; color: var(--accent2); margin-bottom: 6px; }
+    .adv-card .adv-desc { font-size: 0.4em; color: #bbb; line-height: 1.6; }
+
+    .adv-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-top: 0.6em; }
+
+    .timeline { position: relative; padding-left: 36px; margin-top: 0.8em; }
+    .timeline::before { content: ''; position: absolute; left: 14px; top: 4px; bottom: 4px; width: 2px; background: rgba(255,255,255,0.2); }
+    .timeline-item { position: relative; margin-bottom: 18px; font-size: 0.46em; }
+    .timeline-item::before { content: ''; position: absolute; left: -28px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); border: 2px solid #1a1a2e; }
+    .timeline-item .ti-date { color: var(--accent); font-weight: 700; font-size: 1.1em; margin-bottom: 2px; }
+    .timeline-item .ti-text { color: #ccc; }
+
+    .conclusion-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 0.8em; }
+    .conclusion-card { border-radius: 10px; padding: 18px; font-size: 0.44em; }
+    .conclusion-card.positive { background: rgba(79,195,247,0.12); border: 1px solid rgba(79,195,247,0.35); }
+    .conclusion-card.caution { background: rgba(255,183,77,0.1); border: 1px solid rgba(255,183,77,0.3); }
+    .conclusion-card .cc-title { font-size: 1.3em; font-weight: 700; margin-bottom: 8px; }
+    .conclusion-card.positive .cc-title { color: var(--accent2); }
+    .conclusion-card.caution  .cc-title { color: var(--warn); }
+    .conclusion-card ul { list-style: none; padding: 0; margin: 0; color: #ccc; line-height: 1.8; }
+    .conclusion-card ul li::before { content: "→ "; opacity: 0.6; }
+
+    .end-slide { text-align: center; }
+    .end-slide .big { font-size: 3em; margin-bottom: 0.2em; }
+    .end-slide .tagline { font-size: 0.65em; color: #aaa; }
+
+    .vs-grid { display: grid; grid-template-columns: 1fr 60px 1fr; gap: 0; align-items: start; margin-top: 0.6em; }
+    .vs-col { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 18px; }
+    .vs-col.left-col { border-top: 3px solid var(--accent2); }
+    .vs-col.right-col { border-top: 3px solid var(--warn); }
+    .vs-label { font-size: 0.7em; font-weight: 700; margin-bottom: 10px; letter-spacing: 0.05em; }
+    .vs-label.left { color: var(--accent2); }
+    .vs-label.right { color: var(--warn); }
+    .vs-center { display: flex; align-items: center; justify-content: center; font-size: 1.4em; font-weight: 900; color: #555; }
+    .vs-col ul { font-size: 0.42em; list-style: none; padding: 0; margin: 0; }
+    .vs-col ul li { padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .vs-col ul li:last-child { border-bottom: none; }
+    .vs-col ul li::before { content: "✦ "; opacity: 0.5; }
+
+    .project-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 0.6em; }
+    .project-card { background: rgba(255,255,255,0.05); border-radius: 8px; padding: 12px 16px; font-size: 0.4em; border-left: 3px solid var(--accent); color: #ccc; }
+    .project-card strong { color: #fff; }
+    .project-card .tag { display: inline-block; background: rgba(232,100,58,0.2); color: var(--accent); padding: 1px 8px; border-radius: 10px; font-size: 0.85em; margin-left: 6px; }
+
+    .viz-container { position:relative; height:340px; border-radius:12px; overflow:hidden; margin-top:0.6em; }
+    .viz-before, .viz-after { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column; padding:20px; }
+    .viz-before { background:rgba(255,255,255,0.05); clip-path:inset(0 0 0 0); }
+    .viz-after { background:rgba(79,195,247,0.1); clip-path:inset(0 100% 0 0); }
+    .viz-divider { position:absolute; top:0; left:0; width:3px; height:100%; background:linear-gradient(to bottom,transparent,#4fc3f7,transparent); box-shadow:0 0 12px #4fc3f7; pointer-events:none; z-index:1; }
+    .viz-container h3 { font-size:0.7em; margin-bottom:10px; }
+    .viz-container ul { font-size:0.4em; list-style:none; padding:0; color:#ccc; line-height:1.8; }
+    .viz-container ul li::before { content:"✦ "; opacity:0.5; }
+    input[type=range] { width:80%; margin-top:12px; accent-color:var(--accent2); }
+
+    .subtitle-line { font-size:0.48em; color:#aaa; margin-top:0.8em; line-height:1.7; }
+  </style>
+</head>
+<body>
+<div class="reveal">
+  <div class="slides">
+
+    <!-- Slide 1: 封面 [BG] -->
+    <section data-background-image="images/cover.png"
+             data-background-opacity="0.35"
+             data-background-size="cover">
+      <div class="title-slide">
+        <div class="tag">2026 · 入門指南</div>
+        <h1>新手如何學習<br>AI Agent</h1>
+        <h2 style="color:var(--accent); margin-top:0.2em;">從零開始的完整學習路線</h2>
+        <p class="subtitle">AI Agent 不是未來 — 它已經是你工作流程的一部分<br>用對方法，一週就能跑通第一個 Agent</p>
+        <p class="author">Powered by OpenCode · codex-ppt</p>
+      </div>
+    </section>
+
+    <!-- Slide 2: 什麼是 AI Agent？ [ICON] -->
+    <section>
+      <h2>什麼是 AI Agent？</h2>
+      <p style="font-size:0.42em;color:#aaa;margin-bottom:0.4em;">Agent ≠ 聊天機器人。它是一個能自主觀察、思考、行動的智慧體</p>
+      <div class="adv-grid-3">
+        <div class="adv-card fragment">
+          <div class="adv-icon"><img src="images/icon_observe.png" alt="Observe"></div>
+          <div class="adv-title">👁️ Observe 觀察</div>
+          <div class="adv-desc">接收環境資訊：API 回傳、檔案內容、網頁狀態、使用者輸入</div>
+        </div>
+        <div class="adv-card fragment">
+          <div class="adv-icon"><img src="images/icon_think.png" alt="Think"></div>
+          <div class="adv-title">🧠 Think 思考</div>
+          <div class="adv-desc">LLM 推理：拆解任務、規劃步驟、選擇工具、生成回應</div>
+        </div>
+        <div class="adv-card fragment">
+          <div class="adv-icon"><img src="images/icon_act.png" alt="Act"></div>
+          <div class="adv-title">⚙️ Act 行動</div>
+          <div class="adv-desc">執行工具：搜尋網路、讀寫檔案、操作瀏覽器、執行程式碼</div>
+        </div>
+      </div>
+      <div class="quote-box" style="margin-top:0.6em;">
+        <span style="color:var(--accent);font-weight:700;">Agent</span> = LLM + <span style="color:var(--accent2);">工具調用</span> + <span style="color:var(--success);">記憶</span> + <span style="color:var(--warn);">規劃</span>
+      </div>
+    </section>
+
+    <!-- Slide 3: 為什麼現在要學 Agent？ -->
+    <section>
+      <h2>為什麼現在要學 Agent？</h2>
+      <div class="stat-row fragment">
+        <div class="stat-card">
+          <div class="num">$數百億</div>
+          <div class="label">2026 AI Agent 市場規模</div>
+        </div>
+        <div class="stat-card">
+          <div class="num">急缺</div>
+          <div class="label">智能系統架構師</div>
+        </div>
+        <div class="stat-card">
+          <div class="num">3.8k ★</div>
+          <div class="label">Datawhale 學習路線</div>
+        </div>
+      </div>
+      <p class="subtitle-line fragment">從「調 API」到「設計能自主運作的智慧系統」<br>是 2026 年最重要的技術能力升級</p>
+    </section>
+
+    <!-- Slide 4: 學習路線總覽 [VIZ] -->
+    <section>
+      <h2>學習路線總覽</h2>
+      <p style="font-size:0.42em;color:#aaa;">拖曳滑桿從「基礎概念」到「產品上線」</p>
+      <div class="viz-container">
+        <div class="viz-before">
+          <h3 style="color:var(--accent2);">🗺️ 階段 0-3：基礎建構</h3>
+          <ul>
+            <li>Stage 0 — 搞懂 Agent vs Chatbot 差異</li>
+            <li>Stage 1 — 最小 Agent Loop（50-150 行）</li>
+            <li>Stage 2 — Tool Use / RAG / 記憶</li>
+            <li>Stage 3 — Agent Harness 深度學習</li>
+          </ul>
+        </div>
+        <div class="viz-after">
+          <h3 style="color:var(--accent);">🚀 階段 4-8：進階實戰</h3>
+          <ul>
+            <li>Stage 4 — Multi-Agent 協作</li>
+            <li>Stage 5 — Skills &amp; MCP / A2A 協議</li>
+            <li>Stage 6-7 — 瀏覽器 Agent / 評測安全</li>
+            <li>Stage 8 — 上線一個真正可用的 Agent</li>
+          </ul>
+        </div>
+        <div class="viz-divider" id="viz-divider"></div>
+      </div>
+      <input type="range" id="viz-slider" min="0" max="100" value="0"
+             style="width:80%;margin-top:8px;accent-color:var(--accent2);">
+      <div style="display:flex;justify-content:space-between;width:80%;margin:auto;font-size:0.35em;color:#666;">
+        <span>基礎</span>
+        <span>進階</span>
+      </div>
+    </section>
+
+    <!-- Slide 5: 階段 1-2：先跑通一個 Agent -->
+    <section>
+      <h2>階段 1-2：先跑通一個 Agent</h2>
+      <p style="font-size:0.4em;color:var(--accent);margin-bottom:0.2em;">🎯 目標：寫出 50-150 行的最小 Agent，能調用工具並返回結果</p>
+      <div class="adv-grid">
+        <div class="adv-card fragment">
+          <div class="adv-title">📡 Function Calling</div>
+          <div class="adv-desc">OpenAI / Claude / Gemini 都支援結構化工具調用，模型會回傳 JSON 格式的 tool call</div>
+        </div>
+        <div class="adv-card fragment">
+          <div class="adv-title">🔄 Agent Loop</div>
+          <div class="adv-desc">Observe → Think → Act → Observe 循環，加上最大步數、逾時、錯誤處理</div>
+        </div>
+        <div class="adv-card fragment">
+          <div class="adv-title">🧰 定義工具</div>
+          <div class="adv-desc">把搜尋、計算機、讀檔案包裝成工具函數，讓 Agent 按需呼叫</div>
+        </div>
+        <div class="adv-card fragment">
+          <div class="adv-title">📖 學習資源</div>
+          <div class="adv-desc">OpenAI Function Calling、Claude Tool Use、Gemini API Function Calling</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 6: 階段 3-4：工具與多 Agent 協作 -->
+    <section>
+      <h2>階段 3-4：工具與多 Agent 協作</h2>
+      <div class="adv-grid">
+        <div class="adv-card fragment">
+          <div class="adv-title">🔍 RAG 檢索增強</div>
+          <div class="adv-desc">Chunk → Embed → Retrieve → Answer with citations</div>
+        </div>
+        <div class="adv-card fragment">
+          <div class="adv-title">🛠️ 工具生態</div>
+          <div class="adv-desc">搜尋引擎、資料庫、瀏覽器、程式碼執行器、檔案系統</div>
+        </div>
+        <div class="adv-card fragment">
+          <div class="adv-title">👥 Multi-Agent</div>
+          <div class="adv-desc">Supervisor / Graph 協作，避免 agent 閒聊，定義職責邊界</div>
+        </div>
+        <div class="adv-card fragment">
+          <div class="adv-title">🧠 記憶管理</div>
+          <div class="adv-desc">短期上下文 vs 會話記憶 vs 長期記憶；mem0 / Letta</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 7: 階段 5：Skill 與 MCP 協議 -->
+    <section>
+      <h2>階段 5：Skill 與通訊協議</h2>
+      <p style="font-size:0.4em;color:#aaa;margin-bottom:0.2em;">現代 Agent 的能力不只來自模型，更來自可復用的能力包與標準化通訊</p>
+      <div class="adv-grid">
+        <div class="adv-card fragment">
+          <div class="adv-title">📦 Skills</div>
+          <div class="adv-desc">可復用的流程知識包：SKILL.md + 腳本 + 模板，告訴 Agent 如何完成一類任務</div>
+        </div>
+        <div class="adv-card fragment">
+          <div class="adv-title">🔌 MCP (Model Context Protocol)</div>
+          <div class="adv-desc">標準化 Agent 連接外部工具、資料源和服務的方式</div>
+        </div>
+        <div class="adv-card fragment">
+          <div class="adv-title">🤝 A2A (Agent-to-Agent)</div>
+          <div class="adv-desc">讓不同 Agent 之間發現、通訊和協作的開放協議</div>
+        </div>
+        <div class="adv-card fragment">
+          <div class="adv-title">💻 ACP (Agent Client Protocol)</div>
+          <div class="adv-desc">編輯器、終端、IDE 與 Agent 之間的統一介面</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 8: 階段 6-7：瀏覽器 Agent 與評測 -->
+    <section>
+      <h2>階段 6-7：瀏覽器與評測</h2>
+      <div class="vs-grid">
+        <div class="vs-col left-col fragment">
+          <div class="vs-label left">🌐 瀏覽器 Agent</div>
+          <ul>
+            <li>browser-use / Playwright</li>
+            <li>頁面觀察、點擊、提取資訊</li>
+            <li>安全限制：不登入敏感帳號</li>
+            <li>截圖 + DOM + 動作日誌</li>
+            <li>失敗恢復機制</li>
+          </ul>
+        </div>
+        <div class="vs-center">+</div>
+        <div class="vs-col right-col fragment">
+          <div class="vs-label right">📊 評測 &amp; 安全</div>
+          <ul>
+            <li>固定測試集，不只靠 demo</li>
+            <li>成功率 / 成本 / 延遲追蹤</li>
+            <li>危險工具加人工確認</li>
+            <li>Prompt Injection 防護</li>
+            <li>回歸測試防止退化</li>
+          </ul>
+        </div>
+      </div>
+      <p class="subtitle-line fragment" style="text-align:center;">Trace every important run. Add evals before you add more agents.</p>
+    </section>
+
+    <!-- Slide 9: 推薦開源專案 -->
+    <section>
+      <h2>推薦開源專案</h2>
+      <div class="project-grid">
+        <div class="project-card fragment">
+          <strong>Claude Code</strong> <span class="tag">Coding Agent</span><br>
+          最值得研究的 coding agent 產品：shell、文件、權限、hooks、subagents、MCP
+        </div>
+        <div class="project-card fragment">
+          <strong>OpenCode</strong> <span class="tag">Coding Agent</span><br>
+          終端優先的開源 coding agent，支援 skills、多 provider
+        </div>
+        <div class="project-card fragment">
+          <strong>LangGraph</strong> <span class="tag">Orchestration</span><br>
+          狀態圖編排，可控的 agent 工作流
+        </div>
+        <div class="project-card fragment">
+          <strong>browser-use</strong> <span class="tag">Browser</span><br>
+          最容易上手的瀏覽器 Agent 專案
+        </div>
+        <div class="project-card fragment">
+          <strong>learn-claude-code</strong> <span class="tag">Learning</span><br>
+          從零打造 Claude Code-like nano agent
+        </div>
+        <div class="project-card fragment">
+          <strong>Agent-Learning-Hub</strong> <span class="tag">Resource</span><br>
+          Datawhale 社群維護的完整學習路線（3.8k ★）
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 10: 結尾 + 行動清單 [BG] -->
+    <section data-background-image="images/ending.png"
+             data-background-opacity="0.3"
+             data-background-size="cover">
+      <div class="end-slide">
+        <h2 style="color:var(--accent2);margin-bottom:0.4em;">Build first, then read deeper</h2>
+        <div class="conclusion-grid" style="text-align:left;">
+          <div class="conclusion-card positive">
+            <div class="cc-title">🎯 今天就開始</div>
+            <ul>
+              <li>搞懂 Agent vs Chatbot 的差異</li>
+              <li>閱讀 Anthropic: Building effective agents</li>
+              <li>決定一個你想做的場景</li>
+            </ul>
+          </div>
+          <div class="conclusion-card caution">
+            <div class="cc-title">📅 本週目標</div>
+            <ul>
+              <li>跑通最小 Agent Loop Demo</li>
+              <li>加一個自訂工具</li>
+              <li>記錄成功與失敗原因</li>
+            </ul>
+          </div>
+          <div class="conclusion-card positive">
+            <div class="cc-title">📆 本月目標</div>
+            <ul>
+              <li>做一個 browser-use 專案</li>
+              <li>學習一個 Agent Harness</li>
+              <li>寫第一個 SKILL.md</li>
+            </ul>
+          </div>
+          <div class="conclusion-card caution">
+            <div class="cc-title">🔗 參考資源</div>
+            <ul>
+              <li>Datawhale Agent-Learning-Hub</li>
+              <li>LearnAgent.org</li>
+              <li>learn-claude-code / claw0</li>
+            </ul>
+          </div>
+        </div>
+        <p class="tagline" style="margin-top:0.8em;">— 用對方法，一週就能跑通第一個 Agent —</p>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    transition: 'slide',
+    transitionSpeed: 'default',
+    backgroundTransition: 'fade',
+    center: true,
+    progress: true,
+    controls: true,
+    slideNumber: 'c/t',
+    plugins: []
+  });
+
+  document.getElementById('viz-slider')?.addEventListener('input', function() {
+    const v = +this.value;
+    const before = document.querySelector('.viz-before');
+    const after = document.querySelector('.viz-after');
+    const divider = document.getElementById('viz-divider');
+    if (before) before.style.clipPath = `inset(0 0 0 ${v}%)`;
+    if (after) after.style.clipPath = `inset(0 ${100-v}% 0 0)`;
+    if (divider) divider.style.left = v + '%';
+  });
+</script>
+</body>
+</html>
