@@ -1,0 +1,12 @@
+# Intermediate / generated artifacts
+icon_sheet.png
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
